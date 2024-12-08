@@ -7,7 +7,7 @@ import yt_dlp
 from requests.exceptions import ConnectionError
 import logging
 
-logging.basicConfig(level=logging.DEBUG, filename='.log')
+# logging.basicConfig(level=logging.DEBUG, filename='.log')
 
 
 error_messages = {
