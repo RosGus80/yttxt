@@ -43,7 +43,7 @@ def main():
         for k, v in log.items():
             print(f'{k} : {v}')
     else:
-        print("Pass either -u or -f flag so i know what you want to do")
+        print("Pass either -u or -f flag so i know what you want to do. If you need help, type 'yttxt -h'")
 
 
 if __name__ == '__main__':
