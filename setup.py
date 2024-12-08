@@ -1,4 +1,12 @@
+import os
+
 from setuptools import setup, find_packages
+
+if os.system("ffmpeg -version"):
+    raise LookupError(
+        "yttxt is an interface for the yt-dlp package and it uses ffmpeg. Please, install ffmpeg to proceed."
+        "The instruction is on yttxt github page."
+    )
 
 setup(
     name='YTTXT',
