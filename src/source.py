@@ -86,8 +86,7 @@ class YoutubeDownloader:
             'progress_hooks': [self.progress_hook],
             'post_hooks': [self.post_hook],
             'outtmpl': os.path.join(output_dir, '%(title)s.%(ext)s'),
-            'logger': logging.getLogger(__name__),
-            "geo_bypass": True,
+            'geo_bypass': True,
             'socket_timeout': 5,
         }
 
