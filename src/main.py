@@ -1,6 +1,6 @@
 # TODO: make it a module
 def main():
-    from src.src import YoutubeDownloader
+    from src.source import YoutubeDownloader
 
     import argparse
 

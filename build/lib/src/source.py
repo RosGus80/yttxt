@@ -1,7 +1,6 @@
 import json
 import os
 import re
-from pprint import pprint
 
 import requests
 import yt_dlp
