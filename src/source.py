@@ -5,16 +5,15 @@ import re
 import requests
 import yt_dlp
 from requests.exceptions import ConnectionError
-import logging
 
 # logging.basicConfig(level=logging.DEBUG, filename='.log')
 
 
 error_messages = {
-    'connection': 'ERROR: [generic] Unable to download webpage: <urllib3.connection.HTTPSConnection',
-    'invalid_url': "ERROR: [generic] 'title' is not a valid URL.",
-    'unsupported_url': 'ERROR: Unsupported URL:',
-    'page_not_found': 'ERROR: [generic] Unable to download webpage:',
+    'connection': '[generic] Unable to download webpage: <urllib3.connection.HTTPSConnection',
+    'invalid_url': "[generic] 'title' is not a valid URL.",
+    'unsupported_url': 'Unsupported URL:',
+    'page_not_found': '[generic] Unable to download webpage:',
     'timeout': 'Read timed out.',
     'post_hook': 'takes 0 positional arguments but 1 was given',
 }
