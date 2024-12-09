@@ -13,8 +13,9 @@ def main():
     parser.add_argument('-u', '--url', type=str, help="Pass the video URL after the flag to download this video "
                                                       "(put the url into the quotation marks)."
                                                       "Cant't be used simultaneously with the -f flag ", required=False)
-    parser.add_argument('-f', '--file', type=str, help="Pass the path to a file with video (can't be used with -u flag)"
-                                                       "URLs/thumbnails, each on a separate line", required=False)
+    parser.add_argument('-f', '--file', type=str, help="Pass the path to a file with video URLs/thumbnails, "
+                                                       "each on a separate line (can't be used with -u flag)",
+                        required=False)
     parser.add_argument('-o', '--output', type=str, help='Pass the path to the output directory after this flag',
                         required=False)
     parser.add_argument('-a', '--audio', action='store_true', help='If passed, only audios will be downloaded '
