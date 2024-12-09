@@ -11,7 +11,7 @@
 
 * ### Then make sure that ffmpeg is installed by running ``ffmpeg -version`` in your terminal. It should provide some output.
 * ### Then make sure that python is installed on your computer by running ``whichpython``. If python is not installed, install it from https://www.python.org/downloads/
-* #### If ffmpeg and python are installed in your computer, run ``python3 -m pip install --upgrade git+https://github.com/RosGus80/yttxt`` or, for Windows, ``py -m pip install --upgrade git+https://github.com/RosGus80/yttxt``
+* #### If ffmpeg and python are installed on your computer, run ``python3 -m pip install --upgrade git+https://github.com/RosGus80/yttxt`` or, for Windows, ``py -m pip install --upgrade git+https://github.com/RosGus80/yttxt``
 * ### Then you should be able to call yttxt from terminal by running ``yttxt -[flag] [argument]`` (see 'usage' for instructions)
 
 ## Usage 
