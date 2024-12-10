@@ -1,4 +1,3 @@
-# TODO: make it a module
 def main():
     from src.source import YoutubeDownloader
 
@@ -22,9 +21,6 @@ def main():
                                                                    '(False by default)', required=False)
 
     args = parser.parse_args()
-
-    # args.url = 'https://youtu.be/DUakQB7I11c?si=_0KrRFF4u6spyeks'
-    # args.audio = True
 
     if args.url and args.file:
         print('Cant\'t use -u and -f flags at the same time')

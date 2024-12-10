@@ -6,8 +6,6 @@ import requests
 import yt_dlp
 from requests.exceptions import ConnectionError
 
-# logging.basicConfig(level=logging.DEBUG, filename='.log')
-
 
 error_messages = {
     'connection': '[generic] Unable to download webpage: <urllib3.connection.HTTPSConnection',
@@ -145,10 +143,3 @@ class YoutubeDownloader:
 
         return logging_dict
 
-
-# downloaderobj = YoutubeDownloader()
-# # downloaderobj.download(url='https://www.youtube.com/watch?v=dQw4w9WgXcQ&pp=ygUYTmV2ZXIgZ29ubmEgZ2l2ZSB5b3UgdXAK',
-# #                        output_dir='downloads', audio_only=True)
-#
-# links = downloaderobj.extract_urls_from_txt('downloader/songs.txt')
-# downloaderobj.download_from_txt('downloader/songs.txt', output_dir='downloads', audio_only=True)
