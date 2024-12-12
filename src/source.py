@@ -130,7 +130,7 @@ class YoutubeDownloader:
                 'preferredcodec': 'mp3',
             }]
             with YoutubeDL(ydl_opts) as ydl:
-                for i in range(20):
+                for i in range(40):
                     try:
                         ydl.download([url])
                     except Exception as e:
