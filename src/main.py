@@ -3,8 +3,6 @@ def main():
 
     import argparse
 
-    print('Update')
-
     parser = argparse.ArgumentParser(
                     prog='YTTXT',
                     description='Small convenient interface for downloading videos using yt-dlp, hopefully providing '
