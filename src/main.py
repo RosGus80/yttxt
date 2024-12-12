@@ -19,6 +19,8 @@ def main():
                         required=False)
     parser.add_argument('-a', '--audio', action='store_true', help='If passed, only audios will be downloaded '
                                                                    '(False by default)', required=False)
+    parser.add_argument('-d', '--debug', action='store_true', help='If passed, the downloader will print all the log '
+                                                                   'info he gets to the terminal')
 
     args = parser.parse_args()
 
@@ -32,10 +34,11 @@ def main():
         args.output = ''
 
     if args.url:
-        log = downloader.download(args.url, output_dir=args.output, audio_only=args.audio)
+        log = downloader.download(args.url, output_dir=args.output, audio_only=args.audio, debugging=args.debug)
         print(f'{log[0]} : {log[1]}')
     elif args.file:
-        log = downloader.download_from_txt(args.file, output_dir=args.output, audio_only=args.audio)
+        log = downloader.download_from_txt(args.file, output_dir=args.output, audio_only=args.audio,
+                                           debugging=args.debug)
         print(f'the downloading has been finished.')
         for k, v in log.items():
             print(f'{k} : {v}')

@@ -3,7 +3,7 @@ import os
 import re
 
 import requests
-import yt_dlp
+from yt_dlp import YoutubeDL
 from requests.exceptions import ConnectionError
 
 
@@ -19,22 +19,47 @@ error_messages = {
 
 class YoutubeDownloader:
 
+    class DownloaderLogger:
+
+        def error(msg):
+            if not error_messages['post_hook'] in msg and not error_messages['timeout'] in msg:
+                print('ERROR: ' + msg)
+
+        def warning(msg):
+            pass
+
+        def debug(msg):
+            pass
+
+    class DebuggingLogger:
+        def error(msg):
+            if error_messages['post_hook'] in msg:
+                print('[debug] ERROR (CAUSED INTENTIONALLY AS A PART OF A CODE LOGIC): ' + msg)
+            else:
+                print('[debug] ERROR: ' + msg)
+
+        def warning(msg):
+            print('[debug] WARNING: ' + msg)
+
+        def debug(msg):
+            print('[debug] DEBUG: ' + msg)
+
     @staticmethod
-    def find_json(title, max_results=1):
+    def find_json(title, max_results=1) -> dict:
         from youtube_search import YoutubeSearch
 
         results = json.loads(YoutubeSearch(title, max_results=max_results).to_json())
 
         return results
 
-    def get_search_links(self, title, max_results=1):
+    def get_search_links(self, title, max_results=1) -> list:
         json_search = self.find_json(title=title, max_results=max_results)
         link_prefix = 'https://www.youtube.com'
         links = [link_prefix + video['url_suffix'] for video in json_search['videos']]
 
         return links
 
-    def extract_urls_from_txt(self, txt_file):
+    def extract_urls_from_txt(self, txt_file) -> list:
         url_pattern = re.compile(r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+')
 
         with open(txt_file, 'r') as f:
@@ -61,7 +86,7 @@ class YoutubeDownloader:
 
     @staticmethod
     def progress_hook(d):
-        print(d['_percent_str'])
+        print(f'Downloaded: {d["_percent_str"]}')
 
     @staticmethod
     def post_hook():
@@ -69,24 +94,31 @@ class YoutubeDownloader:
         because this is used for breaking the loops of downloading"""
         return 0
 
-    @staticmethod
-    def get_video_info(url):
-        ydl_opts = {}
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+    def get_video_info(self, url) -> dict:
+        print('Extracting page info...')
+        ydl_opts = {'quiet': True,
+                    'logger': self.DownloaderLogger,}
+
+        with YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
         return info
 
-    def download(self, url, output_dir: str = '', audio_only=False) -> tuple[str, str]:
+    def download(self, url, output_dir: str = '', audio_only=False, debugging=False) -> tuple[str, str]:
         print(f'Downloading: {url}')
 
         ydl_opts = {
-            'progress_hooks': [self.progress_hook],
             'post_hooks': [self.post_hook],
             'outtmpl': os.path.join(output_dir, '%(title)s.%(ext)s'),
             'geo_bypass': True,
             'socket_timeout': 5,
-            'newline': True,
+            'quiet': True,
         }
+
+        if debugging:
+            ydl_opts['logger'] = self.DebuggingLogger
+        else:
+            ydl_opts['logger'] = self.DownloaderLogger
+            ydl_opts['progress_hooks'] = [self.progress_hook]
 
         info = self.get_video_info(url)
         video_title = info['title']
@@ -97,7 +129,7 @@ class YoutubeDownloader:
                 'key': 'FFmpegExtractAudio',
                 'preferredcodec': 'mp3',
             }]
-            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            with YoutubeDL(ydl_opts) as ydl:
                 for i in range(20):
                     try:
                         ydl.download([url])
@@ -109,14 +141,14 @@ class YoutubeDownloader:
                             logging_tuple = (video_title, 'Successful')
                             break
                         else:
-                            logging_tuple = (video_title, f"Couldn't download video. Error: {e}")
+                            logging_tuple = (video_title, f"Couldn't download audio. Error: {e}")
                             break
                 else:
                     print(f'Timeout error while downloading {video_title}. Please, check your internet connection')
         else:
             raise Exception('Video download is not implemented yet')
             # TODO: video downloading implementation
-            # ydl_opts['format'] = 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best'
+            # ydl_opts['format'] = 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best'
             # ydl_opts['socket_timeout'] = 20
             # ydl_opts['fragment_retries'] = 10
             # ydl_opts['retries'] = 10
@@ -134,12 +166,12 @@ class YoutubeDownloader:
 
         return logging_tuple
 
-    def download_from_txt(self, txt_file, output_dir='', audio_only=False):
+    def download_from_txt(self, txt_file, output_dir='', audio_only=False, debugging=False):
         """Main func for downloading videos from a file"""
         links = self.extract_urls_from_txt(txt_file)
         logging_dict = {}
         for link in links:
-            log = self.download(link, output_dir=output_dir, audio_only=audio_only)
+            log = self.download(link, output_dir=output_dir, audio_only=audio_only, debugging=debugging)
             logging_dict[log[0]] = log[1]
 
         return logging_dict

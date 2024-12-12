@@ -21,3 +21,4 @@
 #### If you want to download videos from a text file, you should create a text file that would contain either a url or a thumbnail on each line (be careful: if you pass a thumbnail, yttxt will automatically download first video in search by this request) and run ``yttxt -f path-to-file``
 #### If you only want to download audio (mp3) files and not video files, pass the -a flag (with no arguments) along with others. <span style="color:cyan"> ONLY USE WITH -a FLAG -  VIDEO DOWNLOADING IS NOT IMPLEMENTED YET </span>
 #### If you want to specify the output folder for the downloaded files (recommended to do), pass the -o flag. Example: ``yttxt -a -f songs.txt -o downloads``
+#### If you need to get a glimpse on how to program is working and/or open an issue, you would be interested in seeing all the debugging info that yt-dlp provides. In this case, pass the -d flag while calling yttxt
