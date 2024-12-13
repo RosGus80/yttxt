@@ -32,6 +32,7 @@ class YoutubeDownloader:
             pass
 
     class DebuggingLogger:
+
         def error(msg):
             if error_messages['post_hook'] in msg:
                 print('[debug] ERROR (CAUSED INTENTIONALLY AS A PART OF A CODE LOGIC): ' + msg)
@@ -97,7 +98,7 @@ class YoutubeDownloader:
     def get_video_info(self, url) -> dict:
         print('Extracting page info...')
         ydl_opts = {'quiet': True,
-                    'logger': self.DownloaderLogger,}
+                    'logger': self.DownloaderLogger}
 
         with YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
@@ -144,6 +145,7 @@ class YoutubeDownloader:
                             logging_tuple = (video_title, f"Couldn't download audio. Error: {e}")
                             break
                 else:
+                    logging_tuple = (video_title, f"Couldn't download audio. Error: timeout error")
                     print(f'Timeout error while downloading {video_title}. Please, check your internet connection')
         else:
             raise Exception('Video download is not implemented yet')
