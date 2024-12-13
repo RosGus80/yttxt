@@ -13,7 +13,7 @@
 * ### Then make sure that python is installed on your computer by running ``whichpython``. If python is not installed, install it from https://www.python.org/downloads/
 * #### If ffmpeg and python are installed on your computer, run ``python3 -m pip install --upgrade git+https://github.com/RosGus80/yttxt`` or, for Windows, ``py -m pip install --upgrade git+https://github.com/RosGus80/yttxt``
 * ### Then you should be able to call yttxt from terminal by running ``yttxt -[flag] [argument]`` (see 'usage' for instructions)
-* ### If you want to update your yttxt package, you should run ``python3 -m pip install --upgrade --force-reinstall git+https://github.com/RosGus80/yttxt`` or ``py -m pip install --upgrade --force-reinstall git+https://github.com/RosGus80/yttxt`` for Windows
+* #### If you want to update your yttxt package, you should run ``python3 -m pip install --upgrade --force-reinstall git+https://github.com/RosGus80/yttxt`` or ``py -m pip install --upgrade --force-reinstall git+https://github.com/RosGus80/yttxt`` for Windows
 
 ## Usage 
 
