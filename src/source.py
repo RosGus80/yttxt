@@ -60,10 +60,10 @@ class YoutubeDownloader:
 
         return links
 
-    def extract_urls_from_txt(self, txt_file) -> list:
+    def extract_urls_from_txt(self, txt_file, no_check=False) -> list:
         url_pattern = re.compile(r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+')
 
-        with open(txt_file, 'r') as f:
+        with open(txt_file, 'r', encoding='utf-8') as f:
             output_links = []
             for line in f.readlines():
                 if url_pattern.search(line) is None:
@@ -73,6 +73,9 @@ class YoutubeDownloader:
                     video_link = line
                     not_found = f'Video by link {line.strip()} not found'
 
+                if no_check:
+                    output_links.append(video_link)
+                else:
                     try:
                         response = requests.get(video_link)
                     except ConnectionError:
@@ -168,9 +171,11 @@ class YoutubeDownloader:
 
         return logging_tuple
 
-    def download_from_txt(self, txt_file, output_dir='', audio_only=False, debugging=False):
+    def download_from_txt(self, txt_file, output_dir='', audio_only=False, debugging=False, no_check=False):
         """Main func for downloading videos from a file"""
-        links = self.extract_urls_from_txt(txt_file)
+        links = self.extract_urls_from_txt(txt_file, no_check=no_check)
+        # TODO: Ask user if all the links from the file are correct (if title ask title: link? If link, print link: valid/invalid)
+
         logging_dict = {}
         for link in links:
             log = self.download(link, output_dir=output_dir, audio_only=audio_only, debugging=debugging)

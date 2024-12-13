@@ -23,3 +23,4 @@
 #### If you only want to download audio (mp3) files and not video files, pass the -a flag (with no arguments) along with others. <span style="color:cyan"> ONLY USE WITH -a FLAG -  VIDEO DOWNLOADING IS NOT IMPLEMENTED YET </span>
 #### If you want to specify the output folder for the downloaded files (recommended to do), pass the -o flag. Example: ``yttxt -a -f songs.txt -o downloads``
 #### If you need to get a glimpse on how to program is working and/or open an issue, you would be interested in seeing all the debugging info that yt-dlp provides. In this case, pass the -d flag while calling yttxt
+#### Yttxt checks if the link from the file is valid or not. It takes some extra time for the request, but if you don't want it to validate links this way before the downloading process, pass the --no-check flag.

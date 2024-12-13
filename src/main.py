@@ -21,6 +21,8 @@ def main():
                                                                    '(False by default)', required=False)
     parser.add_argument('-d', '--debug', action='store_true', help='If passed, the downloader will print all the log '
                                                                    'info he gets to the terminal')
+    parser.add_argument('-nc', '--no-check', action='store_true', help='If passed, will not check if the link from '
+                                                                       'the file is valid (False by default)')
 
     args = parser.parse_args()
 
@@ -38,7 +40,7 @@ def main():
         print(f'{log[0]} : {log[1]}')
     elif args.file:
         log = downloader.download_from_txt(args.file, output_dir=args.output, audio_only=args.audio,
-                                           debugging=args.debug)
+                                           debugging=args.debug, no_check=args.no_check)
         print(f'the downloading has been finished.')
         for k, v in log.items():
             print(f'{k} : {v}')
