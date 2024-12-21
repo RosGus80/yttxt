@@ -101,6 +101,9 @@ class YoutubeDownloader:
     def get_video_info(self, url) -> dict:
         print('Extracting page info...')
         ydl_opts = {'quiet': True,
+                    'restrictfilenames': True,
+                    'trim_file_names': True,
+                    'windowsfilenames': True,
                     'logger': self.DownloaderLogger}
 
         with YoutubeDL(ydl_opts) as ydl:
@@ -112,10 +115,21 @@ class YoutubeDownloader:
 
         ydl_opts = {
             'post_hooks': [self.post_hook],
-            'outtmpl': os.path.join(output_dir, '%(title)s.%(ext)s'),
+            'outtmpl': os.path.join(output_dir, '%(title)s'),
             'geo_bypass': True,
             'socket_timeout': 5,
             'quiet': True,
+            'restrictfilenames': True,
+            'trim_file_names': True,
+            'windowsfilenames': True,
+            'extractor_args': {
+                'youtube': {
+                    'player_client': ['android', 'web'],
+                }
+            },
+            'http_headers': {
+                'User-Agent': 'com.google.android.youtube/17.01.34 (Linux; U; Android 11; Pixel 4 XL Build/RQ1A.210105.003)',
+            }
         }
 
         if debugging:
@@ -151,23 +165,24 @@ class YoutubeDownloader:
                     logging_tuple = (video_title, f"Couldn't download audio. Error: timeout error")
                     print(f'Timeout error while downloading {video_title}. Please, check your internet connection')
         else:
-            raise Exception('Video download is not implemented yet')
-            # TODO: video downloading implementation
-            # ydl_opts['format'] = 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best'
-            # ydl_opts['socket_timeout'] = 20
-            # ydl_opts['fragment_retries'] = 10
-            # ydl_opts['retries'] = 10
-            # ydl_opts['postprocessors'] = [{
-            #     'key': 'FFmpegMerger',
-            # }]
-            # with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            #     try:
-            #         ydl.download([url])
-            #     except Exception as e:
-            #         if error_messages['post_hook'] in str(e):
-            #             print(f'Video {video_title} has been downloaded')
-            #         else:
-            #             raise e
+            ydl_opts['format'] = 'bestvideo[ext=mp4][vcodec^=avc1]+bestaudio[ext=m4a]/best[ext=mp4]'
+            ydl_opts['socket_timeout'] = 20
+            ydl_opts['fragment_retries'] = 10
+            ydl_opts['merge_output_format'] = 'mp4'
+            ydl_opts['postprocessors'] = [{
+                'key': 'FFmpegVideoConvertor',
+                'preferedformat': 'mp4',
+            }]
+
+            with YoutubeDL(ydl_opts) as ydl:
+                try:
+                    ydl.download([url])
+                except Exception as e:
+                    if error_messages['post_hook'] in str(e):
+                        print(f'Video {video_title} has been downloaded')
+                        logging_tuple = (video_title, 'Successful')
+                    else:
+                        logging_tuple = (video_title, f"Couldn't download video. Error: {e}")
 
         return logging_tuple
 
