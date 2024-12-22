@@ -122,14 +122,6 @@ class YoutubeDownloader:
             'restrictfilenames': True,
             'trim_file_names': True,
             'windowsfilenames': True,
-            'extractor_args': {
-                'youtube': {
-                    'player_client': ['android', 'web'],
-                }
-            },
-            'http_headers': {
-                'User-Agent': 'com.google.android.youtube/17.01.34 (Linux; U; Android 11; Pixel 4 XL Build/RQ1A.210105.003)',
-            }
         }
 
         if debugging:
