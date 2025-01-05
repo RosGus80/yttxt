@@ -122,6 +122,7 @@ class YoutubeDownloader:
             'restrictfilenames': True,
             'trim_file_names': True,
             'windowsfilenames': True,
+            # 'cookiesfrombrowser': 'safari',
         }
 
         if debugging:
