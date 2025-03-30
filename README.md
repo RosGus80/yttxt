@@ -15,6 +15,10 @@
 * ### Then you should be able to call yttxt from terminal by running ``yttxt -[flag] [argument]`` (see 'usage' for instructions)
 * #### If you want to update your yttxt package, you should run ``python3 -m pip install --upgrade --force-reinstall git+https://github.com/RosGus80/yttxt`` or ``py -m pip install --upgrade --force-reinstall git+https://github.com/RosGus80/yttxt`` for Windows
 
+## If you face any errors:
+#### Always try to reinstall yttxt (``pip install --upgrade --force-reinstall  git+https://github.com/RosGus80/yttxt``) - there may be crucial features that were added to yttxt or yt-dlp
+#### If this doesn't help, feel free to open an issue and describe the error
+
 ## Usage 
 
 #### You should call this module by running ``yttxt -[flag] [argument]``. For help, you should run ``yttxt -h`` and check all the valid flags.
