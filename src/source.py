@@ -94,8 +94,8 @@ class YoutubeDownloader:
 
     @staticmethod
     def post_hook():
-        """Post hook is used solely to raise an exception in case he is called,
-        because this is used for breaking the loops of downloading"""
+        """Post hook is used solely to raise an exception in case it is called,
+        because this is used for breaking the downloading loop"""
         return 0
 
     def get_video_info(self, url) -> dict:
@@ -113,6 +113,13 @@ class YoutubeDownloader:
     def download(self, url, output_dir: str = '', audio_only=False, debugging=False) -> tuple[str, str]:
         print(f'Downloading: {url}')
 
+        if output_dir == '':
+            # Чтобы всегда output_dir имело смысл
+            output_dir = os.getcwd()
+
+        info = self.get_video_info(url)
+        video_title = info['title']
+
         ydl_opts = {
             'post_hooks': [self.post_hook],
             'outtmpl': os.path.join(output_dir, '%(title)s'),
@@ -122,7 +129,6 @@ class YoutubeDownloader:
             'restrictfilenames': True,
             'trim_file_names': True,
             'windowsfilenames': True,
-            # 'cookiesfrombrowser': 'safari',
         }
 
         if debugging:
@@ -131,16 +137,14 @@ class YoutubeDownloader:
             ydl_opts['logger'] = self.DownloaderLogger
             ydl_opts['progress_hooks'] = [self.progress_hook]
 
-        info = self.get_video_info(url)
-        video_title = info['title']
-
         if audio_only:
             ydl_opts['format'] = 'bestaudio/best'
             ydl_opts['postprocessors'] = [{
                 'key': 'FFmpegExtractAudio',
                 'preferredcodec': 'mp3',
             }]
-            with YoutubeDL(ydl_opts) as ydl:
+
+            with YoutubeDL(ydl_opts) as ydl:           
                 for i in range(40):
                     try:
                         ydl.download([url])
@@ -157,6 +161,31 @@ class YoutubeDownloader:
                 else:
                     logging_tuple = (video_title, f"Couldn't download audio. Error: timeout error")
                     print(f'Timeout error while downloading {video_title}. Please, check your internet connection')
+
+                # Пост-переименование
+
+                # По умолчанию ожидаем, что файл скачается в (директория)/(потенциальное название).mp3 
+                # (если вдруг формат другой - забочусь об этом далее)
+                old_fn = os.path.join(output_dir, f'{ydl.prepare_filename(info)}.mp3') 
+
+                # Если файла (название).mp3 не существует в целевой директории, ищет совпадения с 
+                # потенциальным названием (ожидаю, что мог скачать (название).(странный формат))  
+                if not os.path.exists(old_fn):
+                    for pos in os.listdir(output_dir):
+                        if ydl.prepare_filename(info) in pos:
+                            # Если найдено совпадение по потенципальному названию
+                            old_fn = os.path.join(output_dir, pos)
+                            # Нахожу формат скачанног файла
+                            format = old_fn.split('.')[-1]
+                            # Переименовываю в тайтл видео с нужным форматом
+                            new_fn = f'{os.path.join(output_dir, video_title)}.{format}'
+                            os.rename(old_fn, new_fn)
+                            break
+                else:
+                    # Если есть файл (потенциальное название).mp3, переименовываем его в (тайтл).mp3
+                    new_fn = f'{os.path.join(output_dir, video_title)}.mp3'
+                    os.rename(old_fn, new_fn)
+
         else:
             ydl_opts['format'] = 'bestvideo[ext=mp4][vcodec^=avc1]+bestaudio[ext=m4a]/best[ext=mp4]'
             ydl_opts['socket_timeout'] = 20
@@ -176,6 +205,33 @@ class YoutubeDownloader:
                         logging_tuple = (video_title, 'Successful')
                     else:
                         logging_tuple = (video_title, f"Couldn't download video. Error: {e}")
+
+                # Пост-переименование
+
+                # По умолчанию ожидаем, что файл скачается в (директория)/(потенциальное название).mp3 
+                # (если вдруг формат другой - забочусь об этом далее)
+                old_fn = os.path.join(output_dir, f'{ydl.prepare_filename(info)}.mp4')              
+
+                # Если файла (название).mp4 не существует в целевой директории, ищет совпадения с 
+                # потенциальным названием (ожидаю, что мог скачать (название).(странный формат))
+                if not os.path.exists(old_fn):
+                    for pos in os.listdir(output_dir):
+                        if ydl.prepare_filename(info) in pos:
+                            # Если найдено совпадение по потенципальному названию
+                            old_fn = os.path.join(output_dir, pos)
+                            # Нахожу формат скачанного файла
+                            format = pos.split('.')[-1]
+                            # Переименовываю в тайтл видео с нужным форматом
+                            new_fn = f'{os.path.join(output_dir, video_title)}.{format}'
+                            os.rename(old_fn, new_fn)
+                            break
+                else:
+                    # Если есть файл (потенциальное название).mp4, переименовываем его в (тайтл).mp4
+                    new_fn = f'{os.path.join(output_dir, video_title)}.mp4'
+                    os.rename(old_fn, new_fn)
+
+                # Если вдруг old_fn файла не было в директории А ТАК ЖЕ не найдено файла с совпадением с 
+                # потенциальным названием, побежденно опускаем голову и оставляем название как есть
 
         return logging_tuple
 
