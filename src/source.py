@@ -117,6 +117,8 @@ class YoutubeDownloader:
             # Чтобы всегда output_dir имело смысл
             output_dir = os.getcwd()
 
+        print(output_dir)
+
         info = self.get_video_info(url)
         video_title = info['title']
 
