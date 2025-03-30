@@ -119,8 +119,6 @@ class YoutubeDownloader:
         else:
             output_dir = f'{os.getcwd()}/{output_dir}'
 
-        print(output_dir)
-
         info = self.get_video_info(url)
         video_title = info['title']
 
