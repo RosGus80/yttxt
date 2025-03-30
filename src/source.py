@@ -116,6 +116,8 @@ class YoutubeDownloader:
         if output_dir == '':
             # Чтобы всегда output_dir имело смысл
             output_dir = os.getcwd()
+        else:
+            output_dir = f'{os.getcwd()}/{output_dir}'
 
         print(output_dir)
 
