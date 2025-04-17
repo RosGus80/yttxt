@@ -66,6 +66,8 @@ class YoutubeDownloader:
         with open(txt_file, 'r', encoding='utf-8') as f:
             output_links = []
             for line in f.readlines():
+                if line.strip() == '':
+                    continue
                 if url_pattern.search(line) is None:
                     video_link = self.get_search_links(title=line, max_results=1)[0]
                     output_links.append(video_link)
